@@ -1,6 +1,5 @@
 from ftplib import FTP
 import ftplib
-import mysql.connector
 import time
 
 def check_cred(user,password):
