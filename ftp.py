@@ -17,19 +17,22 @@ def check_cred(user,password):
         print("WTF this shit ain't right")
     return 0
 
-
-start = time.time()
-with open('top_100.txt','r') as fp:
-    line = fp.readline().strip()
-    cnt = 1
-    while line:
-        ret = check_cred('crypto',line)
-        if(ret==1):
-            break
+def main():
+    start = time.time()
+    with open('top_100.txt','r') as fp:
         line = fp.readline().strip()
-        cnt += 1
-    
-if(ret==1):
-    print("DA PASS WORD IS",line)
-dur = time.time() - start
-print("Duration:",dur)
+        cnt = 1
+        while line:
+            ret = check_cred('crypto',line)
+            if(ret==1):
+                break
+            line = fp.readline().strip()
+            cnt += 1
+        
+    if(ret==1):
+        print("DA PASS WORD IS",line)
+    dur = time.time() - start
+    print("Duration:",dur)
+
+if __name__ == "__main__":
+    main()
