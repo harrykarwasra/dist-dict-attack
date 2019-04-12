@@ -1,7 +1,13 @@
+#
+#  Copyright (C) 2019 by
+#  Divyansh Gupta, Harry Karwasra, Nandana Varshney, Nikhil Ramakrishnan
+#
+#  This project is licensed under the MIT License
+
+import hashlib
 import os
 import struct
 import time
-import hashlib
 
 logo = r'''
 ___________                             __________                __          

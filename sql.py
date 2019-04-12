@@ -1,6 +1,11 @@
+#
+#  Copyright (C) 2019 by
+#  Divyansh Gupta, Harry Karwasra, Nandana Varshney, Nikhil Ramakrishnan
+#
+#  This project is licensed under the MIT License
+
 import mysql.connector
-from mysql.connector import Error
-from mysql.connector import errorcode
+from mysql.connector import Error, errorcode
 
 def mysql_connect(dbhost,dbuser='root',dbpasswd='',dbname='pass_dict'):
     conn = mysql.connector.connect(

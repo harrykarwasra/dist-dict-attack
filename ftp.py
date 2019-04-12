@@ -1,6 +1,12 @@
-from ftplib import FTP
+#
+#  Copyright (C) 2019 by
+#  Divyansh Gupta, Harry Karwasra, Nandana Varshney, Nikhil Ramakrishnan
+#
+#  This project is licensed under the MIT License
+
 import ftplib
 import time
+from ftplib import FTP
 
 ftp = None
 
