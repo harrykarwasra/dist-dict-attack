@@ -23,17 +23,36 @@ def start_session(conn, id, host, username):
     csr.close()
     return False
 
+def get_session_data(conn,id):
+    csr = conn.cursor()
+    sql = "SELECT host,username FROM sessions WHERE id = %s"
+    val = (id,)
+    csr.execute(sql, val)
+    res = csr.fetchall()
+    if len(res)==0:
+        return None
+    return res[0]
+
+def clear_flags(conn):
+    csr = conn.cursor()
+    sql = "UPDATE passwords SET used = 0"
+    csr.execute(sql)
+    conn.commit()
+    csr.close()
+
 def get_password(conn):
     # Make sure we are in transaction mode
-    conn.autocommit(False)
+    conn.autocommit = False
     csr = conn.cursor()
     try:
         # Get a password
         csr.execute("SELECT id,pass FROM passwords WHERE used = 0 ORDER BY RAND() LIMIT 1")
         res = csr.fetchone()
+        if res is None:
+            return None
         # Now update the value to show pass is used
         sql = "UPDATE passwords SET used = 1 WHERE id = %s"
-        val = (res[0])
+        val = (res[0],)
         csr.execute(sql, val)
         conn.commit()
         csr.close()
@@ -57,15 +76,36 @@ def password_found(conn, id, password):
 
 def is_session_running(conn, id):
     csr = conn.cursor()
-    sql = "SELECT found FROM sessions WHERE id = %s"
-    val = (id)
+    sql = "SELECT found FROM sessions WHERE id = %s LIMIT 1"
+    val = (id,)
     csr.execute(sql, val)
-    res = csr.fetchone()
-    if res[0] == 1:
+    res = csr.fetchall()
+    if len(res) == 0:
+        return False
+    if res[0][0] == 1:
         csr.close()
         return False
     csr.close()
     return True
+
+def check_running_sessions(conn):
+    csr = conn.cursor()
+    sql = "SELECT id FROM sessions WHERE found = 0"
+    csr.execute(sql)
+    res = csr.fetchall()
+    if(len(res) > 0):
+        return res[0][0]
+    return None
+
+def rollback(conn, id):
+    csr = conn.cursor()
+    sql = "DELETE FROM sessions WHERE id = %s"
+    val = (id,)
+    csr.execute(sql,val)
+    conn.commit()
+    csr.close()
+    clear_flags(conn)
+
 
 def close_connection(conn):
     if(conn.is_connected()):
