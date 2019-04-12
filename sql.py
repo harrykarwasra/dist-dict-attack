@@ -51,7 +51,8 @@ def get_password(conn):
     csr = conn.cursor()
     try:
         # Get a password
-        csr.execute("SELECT id,pass FROM passwords WHERE used = 0 ORDER BY RAND() LIMIT 1")
+        sql = "SELECT id,pass FROM passwords WHERE used = 0 ORDER BY RAND() LIMIT 1"
+        csr.execute(sql)
         res = csr.fetchone()
         if res is None:
             return None
