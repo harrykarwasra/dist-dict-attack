@@ -3,7 +3,7 @@ import struct
 import time
 import hashlib
 
-logo = '''\
+logo = r'''
 ___________                             __________                __          
 \__    ___/___   ____   ________________\______   \_______ __ ___/  |_  ____  
   |    |_/ __ \ /    \ /  ___/  _ \_  __ \    |  _/\_  __ \  |  \   __\/ __ \ 
@@ -20,11 +20,19 @@ Select an option:
 Your choice? \
 '''
 
+b = u"\u2022"
+bullet = '\t[' + b + ']\t'
+
+connect_db = "Establishing connection to database..."
+session = "Setting up session for the host"
+start_att = "Starting attack"
+resume_att = "Resuming distributed attack"
+
 def gen_id():
     seed = str(struct.unpack('I', os.urandom(4)))
     t = str(time.time())
     txt = seed+t
-    hash_object = hashlib.sha256(txt.encode('utf-8')).hexdigest()
+    hash_object = str(hashlib.sha256(txt.encode('utf-8')).hexdigest())
     return hash_object[:8]
 
 def get_logo():
@@ -34,4 +42,22 @@ def get_logo():
 def show_ops():
     global options
     return options
-    
+
+def attack_start():
+    return bullet + start_att
+def attack_resume(host,username):
+    return bullet + resume_att + " for user '" + username + \
+      "' on FTP host '" + host + "'"
+def progress_start():
+  return bullet + "Working..."
+def db_connect():
+    return bullet + connect_db
+def sess_setup():
+    return bullet + session
+def status_update(passwd):
+    return bullet + "Update: Last password tried was '" + passwd + \
+                    "'. Working..."
+def found_pass(host,username,passwd):
+    st = bullet + "Password for user '" + username + "' on FTP host '" + \
+         host + "' is '" + passwd + "'."
+    return st
