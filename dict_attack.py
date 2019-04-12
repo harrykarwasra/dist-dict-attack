@@ -24,6 +24,8 @@ def main():
         newSession()
     elif opt.strip() == '2':
         existingSession()
+    elif opt.strip() == '3':
+        cleanUp()
     else:
         print("Exiting...")
 
@@ -66,7 +68,7 @@ def existingSession():
     # look for existing sessions
     sess = sql.check_running_sessions(conn)
     if sess is None:
-        print("I don't see any running sessions... Try creating a new one.")
+        print(utils.no_session())
         end_session(2)
 
     # get host IP and username from user
@@ -105,11 +107,12 @@ def attack_prog(id,host,username):
             break
         if status is None:
             end_session(3)
-        
         # check if it's done!
-        if count%10 == 0:
-            if not sql.is_session_running(conn,id):
-                break
+        if not sql.is_session_running(conn,id):
+            break
+
+        # Print a status update after 5 connections
+        if count%5 == 0:
             print(utils.status_update(passwd))
         count+=1
     if flag:
@@ -140,6 +143,20 @@ def end_session(status,id=None):
     print("Goodbye!")
     sys.exit(status)
 
+def cleanUp():
+    global conn
+    print("\nAre you SURE you want to perform a clean up?")
+    print("This will STOP and DELETE any running session.")
+    s = input("Type 'YES' to confirm: ")
+    if(s.strip()=="YES"):
+        # connect to the DB if not already connected
+        connect()
+        print(utils.clean_message())
+        sql.clean(conn)
+        end_session(2)
+    else:
+        print("\nNo changes made. Exiting.")
+        end_session(2)
 
 
 if __name__=="__main__":

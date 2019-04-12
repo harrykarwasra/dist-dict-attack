@@ -12,8 +12,9 @@ ftp = None
 
 def check_cred(host,user,password):
     global ftp
-    if ftp is None:
-        ftp = FTP(host)
+    if ftp is not None:
+        ftp.close()
+    ftp = FTP(host)
     #ftp = FTP('192.168.43.114')
     try:
         ftp.login(user=user, passwd =password)

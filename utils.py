@@ -22,6 +22,7 @@ options = '''\
 Select an option:
     1. Start a new session (do this on the first terminal)
     2. Join another session (do this to add another terminal to the party)
+    3. Clear existing session(s).
 
 Your choice? \
 '''
@@ -33,6 +34,8 @@ connect_db = "Establishing connection to database..."
 session = "Setting up session for the host"
 start_att = "Starting attack"
 resume_att = "Resuming distributed attack"
+clean_msg = "Clearing sessions"
+no_sess = "I don't see any running sessions... Try creating a new one."
 
 def gen_id():
     seed = str(struct.unpack('I', os.urandom(4)))
@@ -60,6 +63,10 @@ def db_connect():
     return bullet + connect_db
 def sess_setup():
     return bullet + session
+def clean_message():
+    return bullet + clean_msg
+def no_session():
+    return bullet + no_sess
 def status_update(passwd):
     return bullet + "Update: Last password tried was '" + passwd + \
                     "'. Working..."

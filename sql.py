@@ -111,6 +111,15 @@ def rollback(conn, id):
     csr.close()
     clear_flags(conn)
 
+def clean(conn):
+    csr = conn.cursor()
+    sql = "DELETE FROM sessions WHERE found = 0"
+    csr.execute(sql)
+    conn.commit()
+    csr.close()
+    clear_flags(conn)
+    close_connection(conn)
+
 
 def close_connection(conn):
     if(conn.is_connected()):
