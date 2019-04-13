@@ -85,6 +85,8 @@ def connect():
     if conn is None:
         print(utils.db_connect())
         conn = sql.mysql_connect('localhost','root','','pass_dict')
+        if conn is None:
+            end_session(2)
 
 def attack_prog(id,host,username):
     '''Start/resume an attack.'''

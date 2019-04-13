@@ -4,16 +4,23 @@
 #
 #  This project is licensed under the MIT License
 
+import sys
+
 import mysql.connector
 from mysql.connector import Error, errorcode
 
+
 def mysql_connect(dbhost,dbuser='root',dbpasswd='',dbname='pass_dict'):
-    conn = mysql.connector.connect(
-    host=dbhost,
-    user=dbuser,
-    passwd=dbpasswd,
-    database=dbname
-    )
+    try:
+        conn = mysql.connector.connect(
+        host=dbhost,
+        user=dbuser,
+        passwd=dbpasswd,
+        database=dbname
+        )
+    except Error as e:
+        print("\nERROR: SQL connection error.\n",e,sep='')
+        return None
     return conn
 
 def start_session(conn, id, host, username):
