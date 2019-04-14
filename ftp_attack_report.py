@@ -179,7 +179,7 @@ for user,data in attempts.items():
     if single_count > 1:
         multi_attack = True
 
-    print("\tUSER:",user)
+    print("\n\tUSER:",user)
     if not (multi_attack or single_attack):
         print("\tNo suspected attacks.")
     elif multi_attack:
