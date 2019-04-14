@@ -10,6 +10,12 @@ import mysql.connector
 from mysql.connector import Error, errorcode
 
 
+# DB Default Info
+host = 'localhost'
+user = 'root'
+paswd = ''
+dbname = 'pass_dict'
+
 def mysql_connect(dbhost,dbuser='root',dbpasswd='',dbname='pass_dict'):
     try:
         conn = mysql.connector.connect(

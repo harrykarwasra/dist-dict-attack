@@ -23,6 +23,7 @@ Select an option:
     1. Start a new session (do this on the first terminal)
     2. Join another session (do this to add another terminal to the party)
     3. Clear existing session(s).
+    4. Modify database settings.
 
 Your choice? \
 '''
@@ -36,6 +37,8 @@ start_att = "Starting attack"
 resume_att = "Resuming distributed attack"
 clean_msg = "Clearing sessions"
 no_sess = "I don't see any running sessions... Try creating a new one."
+db_update_text = "Details updated. This will be vaild only for this" + \
+                 "session. Update data in SQL.py to make permanent."
 
 def gen_id():
     seed = str(struct.unpack('I', os.urandom(4)))

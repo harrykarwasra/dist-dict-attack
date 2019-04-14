@@ -4,6 +4,7 @@
 #
 #  This project is licensed under the MIT License
 
+import getpass
 import sys
 
 import ftp
@@ -26,6 +27,8 @@ def main():
         existingSession()
     elif opt.strip() == '3':
         cleanUp()
+    elif opt.strip() == '4':
+        getDBinfo()
     else:
         print("Exiting...")
 
@@ -84,7 +87,7 @@ def connect():
     global conn
     if conn is None:
         print(utils.db_connect())
-        conn = sql.mysql_connect('localhost','root','','pass_dict')
+        conn = sql.mysql_connect(sql.host,sql.user,sql.paswd,sql.dbname)
         if conn is None:
             end_session(2)
 
@@ -159,6 +162,30 @@ def cleanUp():
     else:
         print("\nNo changes made. Exiting.")
         end_session(2)
+
+def getInfo(name,var,type=0):
+    if type==0:
+        print(name, " (",var,"): ",sep='',end='')
+        temp_var = input()
+        if(temp_var.strip() != ''):
+            return temp_var.strip()
+    elif type==1:
+        temp_var = getpass.getpass(prompt=(name+':'))
+        confirm = getpass.getpass(prompt=("Confirm " + name+':'))
+        if(temp_var == confirm):
+            return temp_var
+        else:
+            print("\nPasswords do not match, try again.")
+    return var
+
+def getDBinfo():
+    print("\nEnter the following info (press enter to keep default):")
+    sql.host = getInfo("Database Host",sql.host)
+    sql.user = getInfo("DB Username",sql.user)
+    sql.paswd = getInfo("DB Password",sql.paswd,1)
+    sql.dbname = getInfo("Database Name",sql.dbname)
+    print("\n",utils.db_update_text,sep='')
+    main()
 
 
 if __name__=="__main__":
