@@ -154,7 +154,7 @@ print("Confirmend Breach Report:")
 if len(anomalies)==0:
     print("No confirmed breaches found.")
 for an in anomalies:
-    print("\tUser account: ", an.username)
+    print("\n\n\tUser account: ", an.username)
     print("\tNumber of failed attempts before successful attempt: ",an.attempts)
 
 print("\nAttempted Attacks Report:")
@@ -186,8 +186,10 @@ for user,data in attempts.items():
         print("\tSuspected distributed attack from the following IPs:")
         print("\n\tIP\t\tAttempts\n")
         for ip,count in data.items():
-            print("\t",ip,"\t",count,sep='')
+            if(count>terminal_threshold):
+                print("\t",ip,"\t",count,sep='')
     elif single_attack:
-        print("\tSuspected single source attack from IP",attack_ip)
+        print("\n\tSuspected single source attack from IP",attack_ip)
+        print("\tNumber of attempts:",single_count)
 
 print(endline)
