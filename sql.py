@@ -11,12 +11,13 @@ from mysql.connector import Error, errorcode
 
 
 # DB Default Info
-host = 'localhost'
-user = 'root'
-paswd = ''
+host = '10.12.2.93'
+user = 'slave'
+paswd = 'cryptoproject@123'
 dbname = 'pass_dict'
 
 def mysql_connect(dbhost,dbuser='root',dbpasswd='',dbname='pass_dict'):
+    '''Connect to the database with the provided credentials.'''
     try:
         conn = mysql.connector.connect(
         host=dbhost,
@@ -30,6 +31,7 @@ def mysql_connect(dbhost,dbuser='root',dbpasswd='',dbname='pass_dict'):
     return conn
 
 def start_session(conn, id, host, username):
+    '''Start a new session'''
     csr = conn.cursor()
     sql = "INSERT INTO sessions (id,host,username) VALUES (%s, %s, %s)"
     val = (id, host, username)
@@ -42,6 +44,7 @@ def start_session(conn, id, host, username):
     return False
 
 def get_session_data(conn,id):
+    '''Get session details of the database'''
     csr = conn.cursor()
     sql = "SELECT host,username FROM sessions WHERE id = %s"
     val = (id,)
@@ -52,6 +55,7 @@ def get_session_data(conn,id):
     return res[0]
 
 def clear_flags(conn):
+    '''Reset flags if any to default values'''
     csr = conn.cursor()
     sql = "UPDATE passwords SET used = 0"
     csr.execute(sql)
@@ -59,6 +63,7 @@ def clear_flags(conn):
     csr.close()
 
 def get_password(conn):
+    '''Returns a password value from the database'''
     # Make sure we are in transaction mode
     conn.autocommit = False
     csr = conn.cursor()
@@ -82,6 +87,7 @@ def get_password(conn):
     return None
 
 def password_found(conn, id, password):
+    '''Update the flag if a password is found'''
     csr = conn.cursor()
     sql = "UPDATE sessions SET found = 1, password = %s WHERE id = %s"
     val = (password, id)
@@ -94,6 +100,7 @@ def password_found(conn, id, password):
     return False
 
 def is_session_running(conn, id):
+    '''Checkk if current session is running based on id'''
     csr = conn.cursor()
     sql = "SELECT found FROM sessions WHERE id = %s LIMIT 1"
     val = (id,)
@@ -108,6 +115,7 @@ def is_session_running(conn, id):
     return True
 
 def check_running_sessions(conn):
+    '''Checks if any previous session is running'''
     csr = conn.cursor()
     sql = "SELECT id FROM sessions WHERE found = 0"
     csr.execute(sql)
@@ -117,6 +125,7 @@ def check_running_sessions(conn):
     return None
 
 def rollback(conn, id):
+    '''Delete info about current running session'''
     csr = conn.cursor()
     sql = "DELETE FROM sessions WHERE id = %s"
     val = (id,)
@@ -126,6 +135,7 @@ def rollback(conn, id):
     clear_flags(conn)
 
 def clean(conn):
+    ''''''
     csr = conn.cursor()
     sql = "DELETE FROM sessions WHERE found = 0"
     csr.execute(sql)
@@ -136,5 +146,6 @@ def clean(conn):
 
 
 def close_connection(conn):
+    '''Close connection to database'''
     if(conn.is_connected()):
         conn.close()

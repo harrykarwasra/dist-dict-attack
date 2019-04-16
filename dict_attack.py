@@ -14,6 +14,7 @@ import utils
 conn = None
 
 def main():
+    '''Main Function'''
     # Print our logo
     print(utils.get_logo())
     print("Welcome to TensorBrute, NOOB.\n")
@@ -54,7 +55,9 @@ def newSession():
         end_session(3)
     # Start the session
     print(utils.sess_setup())
-    sql.start_session(conn,id,host,username)
+    done = sql.start_session(conn,id,host,username)
+    if not done:
+        end_session(5)
     # clean up the flags
     sql.clear_flags(conn)
     # OK - finally ready to start attack
@@ -64,7 +67,7 @@ def newSession():
     attack_prog(id,host,username)
 
 def existingSession():
-    '''Start a new attack session'''
+    '''Start a new attack session if existing session is running'''
     global conn
     # connect to the DB if not already connected
     connect()
@@ -84,6 +87,7 @@ def existingSession():
     
 
 def connect():
+    '''Connect to the database.'''
     global conn
     if conn is None:
         print(utils.db_connect())
@@ -130,6 +134,15 @@ def attack_prog(id,host,username):
         print()
 
 def end_session(status,id=None):
+    '''
+    End Program with optional status code.  
+    Status = 0 : Success  
+    Status = 1 : No password found in the current database.  
+    Status = 2 : General exit.  
+    Status = 3 : Error connecting to FTP server.  
+    Status = 4 : Password found by this user or probably another user.  
+    Status = 5 : SQL error. 
+    '''
     global conn
     print()
     # success
@@ -144,11 +157,14 @@ def end_session(status,id=None):
         print("Not able to connect to the FTP server. Check the IP/URL?")
     elif status==4:
         print("Session ended. Another system probably found the password!")
+    elif status==5:
+        print("SQL error.")
 
     print("Goodbye!")
     sys.exit(status)
 
 def cleanUp():
+    '''Delete existing session and cleanup the database'''
     global conn
     print("\nAre you SURE you want to perform a clean up?")
     print("This will STOP and DELETE any running session.")
@@ -164,6 +180,7 @@ def cleanUp():
         end_session(2)
 
 def getInfo(name,var,type=0):
+    '''Modifies the database credentials for current session'''
     if type==0:
         print(name, " (",var,"): ",sep='',end='')
         temp_var = input()
@@ -179,6 +196,7 @@ def getInfo(name,var,type=0):
     return var
 
 def getDBinfo():
+    '''Get information about the database'''
     print("\nEnter the following info (press enter to keep default):")
     sql.host = getInfo("Database Host",sql.host)
     sql.user = getInfo("DB Username",sql.user)

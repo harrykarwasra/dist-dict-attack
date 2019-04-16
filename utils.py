@@ -41,6 +41,7 @@ db_update_text = "Details updated. This will be vaild only for this" + \
                  "session. Update data in SQL.py to make permanent."
 
 def gen_id():
+    ''''''
     seed = str(struct.unpack('I', os.urandom(4)))
     t = str(time.time())
     txt = seed+t
@@ -48,14 +49,17 @@ def gen_id():
     return hash_object[:8]
 
 def get_logo():
+    '''Returns text ASCII as logo'''
     global logo
     return logo
 
 def show_ops():
+    '''Shows the options'''
     global options
     return options
 
 def attack_start():
+    ''''''
     return bullet + start_att
 def attack_resume(host,username):
     return bullet + resume_att + " for user '" + username + \

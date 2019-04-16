@@ -11,6 +11,7 @@ from ftplib import FTP
 ftp = None
 
 def check_cred(host,user,password):
+    '''Check FTP credentials'''
     global ftp
     if ftp is not None:
         ftp.close()
@@ -28,6 +29,7 @@ def check_cred(host,user,password):
     return None
 
 def check_ftp(host):
+    '''Check if FTP server is availabel'''
     try:
         ftp = FTP(host)
         ftp.close()
@@ -40,6 +42,7 @@ def check_ftp(host):
     return 1
 
 def main():
+    '''Testing'''
     start = time.time()
     with open('top_100.txt','r') as fp:
         line = fp.readline().strip()
